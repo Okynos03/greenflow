@@ -1,11 +1,9 @@
-import React from "react";
+import "../styles/landing.css";
 
 export default function Footer() {
   return (
     <footer className="footer">
-      <div className="container">
-        <p>© 2025 GREENFLOW - Economía Circular en Celaya, Guanajuato</p>
-      </div>
+      <p>© 2025 GREENFLOW - Economía Circular en Celaya, Guanajuato</p>
     </footer>
   );
 }
