@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import "../styles/landing.css";
-import { validateLogin } from "../utils/authUtils";
+import { validateLogin, getUsers } from "../utils/authUtils";
 import AlertToast from "./AlertToast";
 
 export default function LoginModal({ onClose }) {
@@ -14,83 +14,84 @@ export default function LoginModal({ onClose }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === "Escape") {
+        if (onClose) onClose();
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError("");
 
-    // Validaciones básicas
     if (!formData.email || !formData.password) {
-      setError("Por favor, completa todos los campos.");
+      setError("Por favor completa todos los campos.");
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setError("Por favor, ingresa un correo válido.");
-      return;
-    }
-
-    // Validar con "base de datos"
-    const result = validateLogin(formData.email, formData.password);
-
+    const result = validateLogin(formData.email.trim(), formData.password);
     if (result === true) {
-      setToast({ type: "success", message: "Inicio de sesión exitoso ✅" });
-      setError("");
-      onClose();
-    } else {
-      setToast({ type: "error", message: result });
-    }
-  };
+      const users = getUsers();
+      const user = users.find(u => u.email === formData.email.trim());
+      localStorage.setItem("greenflow_logged_in", "1");
+      if (user) localStorage.setItem("greenflow_user", JSON.stringify({ email: user.email, name: user.name || "" }));
+      setToast({ type: "success", message: "Inicio de sesión correcto. Redirigiendo..." });
 
-  const handleClickOutside = (e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      onClose();
+      setTimeout(() => {
+        if (onClose) onClose();
+        window.location.reload();
+      }, 800);
+      return;
     }
+
+    setError(result);
   };
 
   return (
-    <div className="modal-overlay" onClick={handleClickOutside}>
-      <div className="modal-container" ref={modalRef}>
-        <div className="modal-header">
-          <h2>Iniciar Sesión</h2>
-          <button className="close-btn" onClick={onClose}>
-            ×
-          </button>
-        </div>
+    <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget && onClose) onClose(); }}>
+      <div className="modal-container" ref={modalRef} role="dialog" aria-modal="true">
+        <h3 className="modal-header">Iniciar Sesión</h3>
 
-        <form onSubmit={handleSubmit} className="modal-form">
-          <label>Correo Electrónico</label>
+        {error && <div className="error-msg">{error}</div>}
+
+        <form className="modal-form" onSubmit={handleSubmit}>
+          <label className="modal-label">Correo</label>
           <input
-            type="email"
             name="email"
-            placeholder="correo@empresa.com"
+            type="email"
             value={formData.email}
             onChange={handleChange}
+            placeholder="correo@ejemplo.com"
+            required
           />
 
-          <label>Contraseña</label>
+          <label className="modal-label">Contraseña</label>
           <input
-            type="password"
             name="password"
-            placeholder="Contraseña"
+            type="password"
             value={formData.password}
             onChange={handleChange}
+            placeholder="********"
+            required
           />
 
-          {error && <p className="error-msg">{error}</p>}
-
-          <button type="submit" className="btn-modal-create">
-            Iniciar Sesión
-          </button>
+          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+            <button type="submit" className="btn-modal-create">Iniciar Sesión</button>
+          </div>
         </form>
       </div>
-      {toast && (
-  <AlertToast
-    type={toast.type}
-    message={toast.message}
-    onClose={() => setToast(null)}
-  />
-)}
 
+      {toast && (
+        <AlertToast
+          type={toast.type}
+          message={toast.message}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }

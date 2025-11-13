@@ -5,7 +5,7 @@ export default function AlertToast({ type = "success", message, onClose }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-    }, 2500); // 2.5 segundos de duración
+    }, 2500); 
     return () => clearTimeout(timer);
   }, [onClose]);
 
