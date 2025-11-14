@@ -8,6 +8,7 @@ import CategoryBarChart from "../components/CategoryBarChart";
 import ProgressList from "../components/ProgressList";
 
 import DiagnosticPage from "./DiagnosticPage"; // ahora se usará dentro del dashboard
+import OpportunitiesPage from "./OpportunitiesPage";
 
 import {
   kpiData,
@@ -105,12 +106,8 @@ export default function Dashboard() {
         {activeTab === "diagnostico" && <DiagnosticPage />}
 
         {/* ============ OPORTUNIDADES ============ */}
-        {activeTab === "oportunidades" && (
-          <div>
-            <h2>Áreas de Oportunidad</h2>
-            <p>Este módulo mostrará recomendaciones basadas en tu diagnóstico.</p>
-          </div>
-        )}
+        {activeTab === "oportunidades" && <OpportunitiesPage />}
+
 
         {/* ============ RECURSOS ============ */}
         {activeTab === "recursos" && (

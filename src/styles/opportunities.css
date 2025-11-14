@@ -1,0 +1,98 @@
+.op-container {
+  padding: 30px;
+}
+
+.op-kpis {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.op-kpi-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  flex: 1;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+.op-kpi-icon {
+  font-size: 26px;
+}
+
+.op-kpi-value {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.op-export-btn {
+  background: #0fa958;
+  color: #fff;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.op-project-card {
+  background: #fff;
+  padding: 25px;
+  margin-top: 25px;
+  border-radius: 14px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+.op-project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.op-tag {
+  background: #e4edff;
+  color: #4e73df;
+  padding: 6px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+}
+
+.op-project-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin: 20px 0;
+  gap: 20px;
+}
+
+.impact-high { color: #14a44d; font-weight: bold; }
+.impact-medium { color: #f9c449; font-weight: bold; }
+
+.op-benefits span {
+  background: #f6f7f8;
+  padding: 8px 14px;
+  border-radius: 12px;
+  margin-right: 10px;
+}
+
+.op-project-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn-primary {
+  background: #0fa958;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: #eee;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
