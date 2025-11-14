@@ -38,7 +38,16 @@ export default function LoginModal({ onClose }) {
       const users = getUsers();
       const user = users.find(u => u.email === formData.email.trim());
       localStorage.setItem("greenflow_logged_in", "1");
-      if (user) localStorage.setItem("greenflow_user", JSON.stringify({ email: user.email, name: user.name || "" }));
+
+    if (user) {
+        localStorage.setItem("currentUserId", user.id); 
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        localStorage.setItem("greenflow_user", JSON.stringify({
+          email: user.email,
+          name: user.name || user.nombre || ""
+        }));
+      }
+
       setToast({ type: "success", message: "Inicio de sesión correcto. Redirigiendo..." });
 
       setTimeout(() => {

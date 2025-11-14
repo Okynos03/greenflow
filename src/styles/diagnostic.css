@@ -1,0 +1,82 @@
+.diagnostic-container {
+  padding: 40px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background: #dedede;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.progress {
+  height: 100%;
+  background: #0d0d1a;
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  margin-bottom: 30px;
+  color: #555;
+}
+
+.question-card {
+  padding: 20px;
+  border-radius: 15px;
+  background: white;
+  margin-bottom: 30px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.question-tag {
+  display: inline-block;
+  background: #d9f7e4;
+  color: #077b42;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.question-text {
+  margin-bottom: 25px;
+  font-size: 1.4rem;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.option {
+  padding: 18px;
+  background: #f7f7f7;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.option.selected {
+  border-color: #0d0d1a;
+  background: #eaeaea;
+}
+
+.numeric-input {
+  padding: 15px;
+  border-radius: 12px;
+  border: 2px solid #ccc;
+  font-size: 1.1rem;
+  width: 100%;
+}
+
+.diagnostic-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
