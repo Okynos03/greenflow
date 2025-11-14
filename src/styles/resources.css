@@ -1,0 +1,108 @@
+.res-container {
+  padding: 20px;
+}
+
+.res-subtabs {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0 25px;
+}
+
+.res-subtabs button {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: #f2f2f2;
+  border: none;
+  cursor: pointer;
+}
+
+.res-subtabs .active {
+  background: #e8efff;
+  border: 1px solid #3a6dff;
+}
+
+.res-card,
+.res-incentive-card,
+.res-webinar-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.res-icon {
+  font-size: 32px;
+}
+
+.res-tag {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.green { background:#daf5d8; color:#13730d; }
+.yellow { background:#fff0b7; color:#8a6d00; }
+.blue { background:#dbe6ff; color:#1848cc; }
+.gray { background:#eee; color:#444; }
+
+.res-download {
+  margin-left: auto;
+  background: #0b9e36;
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+.res-video-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.res-video-thumb {
+  height: 200px;
+  background: linear-gradient(to bottom right, #00c97f, #007bff);
+  border-radius: 16px;
+}
+
+.res-video-card {
+  background: white;
+  padding: 12px;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.res-link {
+  margin-top: 8px;
+  border: none;
+  background: none;
+  color: #0066ff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.res-incentive-grid {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+
+.res-primary {
+  background: #0b9e36;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.res-webinar-card {
+  display: block;
+}

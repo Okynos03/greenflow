@@ -9,6 +9,7 @@ import ProgressList from "../components/ProgressList";
 
 import DiagnosticPage from "./DiagnosticPage"; // ahora se usará dentro del dashboard
 import OpportunitiesPage from "./OpportunitiesPage";
+import ResourcesPage from "./ResourcesPage.jsx";
 
 import {
   kpiData,
@@ -110,12 +111,8 @@ export default function Dashboard() {
 
 
         {/* ============ RECURSOS ============ */}
-        {activeTab === "recursos" && (
-          <div>
-            <h2>Recursos Disponibles</h2>
-            <p>Guías, documentos, enlaces y herramientas.</p>
-          </div>
-        )}
+        {activeTab === "recursos" && <ResourcesPage />}
+
       </main>
     </div>
   );
