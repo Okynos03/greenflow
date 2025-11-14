@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import "../styles/opportunities.css";
 import { calculateCarbonFootprint } from "../utils/carbonCalc";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export default function OpportunitiesPage() {
 
@@ -20,6 +22,48 @@ export default function OpportunitiesPage() {
       setCo2(0); // fallback por si no existe diagnóstico aún
     }
   }, []);
+
+    const exportPDF = () => {
+    const userId = localStorage.getItem("currentUserId");
+    const diagnostics = JSON.parse(localStorage.getItem("diagnostics")) || {};
+    const answers = diagnostics[userId] || {};
+
+    const footprint = calculateCarbonFootprint(answers) || { total: 0, details: {} };
+    const details = footprint.details || {};
+
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Reporte de Huella de Carbono", 14, 20);
+
+    doc.setFontSize(12);
+    doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 14, 30);
+
+    const tableRows = [
+        ["Combustión Fija (D1)", `${footprint.D1 || 0} kg CO₂`],
+        ["Combustión Móvil (D2)", `${footprint.D2 || 0} kg CO₂`],
+        ["Refrigerantes (D3)", `${footprint.D3 || 0} kg CO₂`],
+        ["Electricidad (D4)", `${footprint.D4 || 0} kg CO₂`],
+        ["Residuos (D7)", `${footprint.D7 || 0} kg CO₂`]
+    ];
+
+    // 🔥 **IMPORTANTE: usar autoTable(doc, ...)**
+    autoTable(doc, {
+        head: [["Categoría", "Emisiones (kg CO₂)"]],
+        body: tableRows,
+        startY: 40
+    });
+
+    doc.setFontSize(14);
+    doc.text(
+        `Total: ${(footprint.total / 1000).toFixed(2)} toneladas de CO₂`,
+        14,
+        doc.lastAutoTable ? doc.lastAutoTable.finalY + 15 : 55
+    );
+
+    doc.save("reporte-huella-carbono.pdf");
+    };
+
 
   return (
     <div className="op-container">
@@ -50,7 +94,10 @@ export default function OpportunitiesPage() {
         </div>
       </div>
 
-      <button className="op-export-btn">Exportar Reporte</button>
+      <button className="op-export-btn" onClick={exportPDF}>
+        Exportar Reporte
+        </button>
+
 
       {/* ==== PROYECTO 1 ==== */}
       <div className="op-project-card">
