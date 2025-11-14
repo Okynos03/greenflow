@@ -51,13 +51,13 @@
   font-weight: 600;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
-  border: 1px solid #ddd; /* ← evita el borde negro */
+  border: 1px solid #ddd;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 
 .navbar-link:hover {
-  background-color: #e5e5e5; /* tono suave, sin negro */
+  background-color: #e5e5e5;
   border-color: #ccc;
 }
 
@@ -92,7 +92,7 @@
 }
 
 .hero-image img {
-  width: 320px; /* control del tamaño */
+  width: 320px;
   max-width: 100%;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
@@ -170,15 +170,15 @@
   font-size: 1rem;
 }
 
-/* ===== INFO SECTION (¿Quieres conocer más?) ===== */
+/* ===== INFO SECTION ===== */
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 por fila */
-  gap: 2rem 3rem; /* más separación horizontal y vertical */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem 3rem;
   justify-content: center;
   align-items: stretch;
   margin: 2.5rem auto 0;
-  max-width: 950px; /* centra el contenido */
+  max-width: 950px;
 }
 
 .info-card {
@@ -199,7 +199,7 @@
 }
 
 .info-card img {
-  height: 36px; /* íconos un poco más grandes */
+  height: 36px;
   flex-shrink: 0;
 }
 
@@ -207,8 +207,8 @@
   color: var(--text-dark);
   font-size: 1.05rem;
   line-height: 1.5;
-  text-align: left;
   margin: 0;
+  text-align: left;
 }
 
 /* ===== FEATURES ===== */
@@ -242,6 +242,7 @@
 .feature-card p {
   margin-top: 0; 
 }
+
 .feature-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 8px 22px rgba(0,0,0,0.18);
@@ -288,6 +289,7 @@
   padding: 1rem;
   font-size: 0.9rem;
 }
+
 /* ===== MODAL ===== */
 .modal-overlay {
   position: fixed;
@@ -314,7 +316,6 @@
   position: relative;
 }
 
-/* HEADER */
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -332,7 +333,6 @@
   background: none;
   border: none;
   font-size: 1.5rem;
-  line-height: 1;
   cursor: pointer;
   color: #555;
 }
@@ -368,7 +368,6 @@
   background-color: #fff;
 }
 
-/* ===== BOTÓN CREAR CUENTA ===== */
 .btn-modal-create {
   width: 100%;
   background-color: var(--green-primary);
@@ -397,7 +396,6 @@
   text-align: center;
 }
 
-
 /* Animaciones */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -409,14 +407,12 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* Evita que los select se corten */
 select {
   position: relative;
   z-index: 10;
 }
 
-
-/* ===== RESPONSIVE DESIGN ===== */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   .hero-content {
     flex-direction: column;
@@ -429,7 +425,7 @@ select {
   }
 
   .hero-image img {
-    width: 240px; /* reduce un poco el tamaño en móvil */
+    width: 240px;
     margin-top: 1rem;
   }
 
@@ -460,10 +456,9 @@ select {
   }
 }
 
-/* Versión móvil */
 @media (max-width: 768px) {
   .info-grid {
-    grid-template-columns: 1fr; /* 1 por fila en móvil */
+    grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
@@ -471,4 +466,3 @@ select {
     padding: 1.5rem;
   }
 }
-
