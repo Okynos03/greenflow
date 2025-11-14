@@ -46,6 +46,7 @@ export default function OpportunitiesPage() {
         ["Electricidad (D4)", `${footprint.D4 || 0} kg CO₂`],
         ["Residuos (D7)", `${footprint.D7 || 0} kg CO₂`]
     ];
+    //hola
 
     // 🔥 **IMPORTANTE: usar autoTable(doc, ...)**
     autoTable(doc, {
