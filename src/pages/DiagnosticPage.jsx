@@ -3,7 +3,7 @@ import diagnosticQuestions from "../data/diagnosticQuestions";
 import DiagnosticQuestion from "../components/DiagnosticQuestion";
 import "../styles/diagnostic.css";
 
-export default function DiagnosticPage() {
+export default function DiagnosticPage({ redirectToResource }) {
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -115,6 +115,24 @@ export default function DiagnosticPage() {
   const current = filteredQuestions[step];
   const progress = ((step + 1) / filteredQuestions.length) * 100;
 
+  // 🔥 NUEVA LÓGICA DE REDIRECCIÓN AL HACER CLIC EN SIGUIENTE
+  const handleNext = () => {
+    // 1. Verificar si es la pregunta F0 (índice 0)
+    if (step === 0 && current.id === "F0") {
+      const answerF0 = answers["F0"];
+      
+      // 2. Si la respuesta es "No, necesitamos más tiempo..."
+      if (answerF0 === "No, necesitamos más tiempo para recopilarla.") {
+        // Redirigir al tab de Recursos -> Guías (recurso educativo)
+        redirectToResource("guias"); 
+        return; // Detiene la ejecución para no avanzar el paso
+      }
+    }
+    
+    // Si la respuesta es "Sí" o es cualquier otra pregunta, avanza normalmente
+    setStep(step + 1);
+  };
+
   return (
     <div className="diagnostic-container">
       <h1>Diagnóstico de Economía Circular</h1>
@@ -149,7 +167,7 @@ export default function DiagnosticPage() {
         {step < filteredQuestions.length - 1 ? (
           <button
             className="btn-primary"
-            onClick={() => setStep(step + 1)}
+            onClick={handleNext} 
             disabled={!answers[current.id]}
           >
             Siguiente

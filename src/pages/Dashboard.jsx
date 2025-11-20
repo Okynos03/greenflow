@@ -33,6 +33,14 @@ export default function Dashboard() {
   const initialTab = isDiagnosticCompleted() ? "resumen" : "diagnostico";
   const [activeTab, setActiveTab] = useState(initialTab);
 
+  //NUEVO ESTADO: Para controlar la subpestaña de Recursos
+  const [resourceSubTab, setResourceSubTab] = useState("guias"); 
+
+  //NUEVA FUNCIÓN: Redirige al recurso específico
+  const redirectToResource = (subTab) => {
+    setActiveTab("recursos");
+    setResourceSubTab(subTab);
+  };
 
   return (
     <div>
@@ -115,14 +123,18 @@ export default function Dashboard() {
         )}
 
         {/* ============ DIAGNÓSTICO ============ */}
-        {activeTab === "diagnostico" && <DiagnosticPage />}
+        {activeTab === "diagnostico" && 
+            //PASAR LA FUNCIÓN DE REDIRECCIÓN COMO PROP
+            <DiagnosticPage redirectToResource={redirectToResource} />
+        }
 
         {/* ============ OPORTUNIDADES ============ */}
         {activeTab === "oportunidades" && <OpportunitiesPage />}
 
 
         {/* ============ RECURSOS ============ */}
-        {activeTab === "recursos" && <ResourcesPage />}
+        {/*PASAR EL SUBTAB ACTIVO AL COMPONENTE ResourcesPage */}
+        {activeTab === "recursos" && <ResourcesPage initialTab={resourceSubTab} />}
 
       </main>
     </div>
