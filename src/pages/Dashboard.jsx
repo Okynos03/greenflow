@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Importar useEffect
 import Navbar from "../components/Navbar";
 
 // Componentes ya existentes
@@ -7,7 +7,7 @@ import MonthlyLineChart from "../components/MonthlyLineChart";
 import CategoryBarChart from "../components/CategoryBarChart";
 import ProgressList from "../components/ProgressList";
 
-import DiagnosticPage from "./DiagnosticPage"; // ahora se usará dentro del dashboard
+import DiagnosticPage from "./DiagnosticPage"; 
 import OpportunitiesPage from "./OpportunitiesPage";
 import ResourcesPage from "./ResourcesPage.jsx";
 
@@ -21,7 +21,18 @@ import {
 import "../styles/dashboard.css";
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState("resumen");
+  
+  // Función para verificar si el diagnóstico está completado
+  const isDiagnosticCompleted = () => {
+    const userId = localStorage.getItem("currentUserId");
+    const diagnostics = JSON.parse(localStorage.getItem("diagnostics")) || {};
+    return !!diagnostics[userId];
+  };
+
+  // El estado inicial ahora depende del resultado de isDiagnosticCompleted()
+  const initialTab = isDiagnosticCompleted() ? "resumen" : "diagnostico";
+  const [activeTab, setActiveTab] = useState(initialTab);
+
 
   return (
     <div>

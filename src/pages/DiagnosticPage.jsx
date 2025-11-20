@@ -10,8 +10,8 @@ export default function DiagnosticPage() {
   const [finished, setFinished] = useState(false); // 🔥 pantalla final
 
   /* ======================================================
-     Detectar usuario y filtrar preguntas según sector y tamaño
-     ====================================================== */
+  // Detectar usuario y filtrar preguntas según sector
+  // ====================================================== */
 
   useEffect(() => {
     const userId = localStorage.getItem("currentUserId");
@@ -20,40 +20,52 @@ export default function DiagnosticPage() {
 
     if (!user) return;
 
-    const sector = user.sector;
-    const size = user.empleados;
+    // Usar el sector guardado para filtrar
+    const sector = user.sector; 
 
-    let sizeType = "micro";
-    if (size === "51-200" || size === "201-500") sizeType = "mediana";
-    if (size === "Más de 500") sizeType = "grande";
+    // Mapeo especial para los sectores que son combinados o simplificados en las preguntas
+    const sectorMap = {
+      "Alimentos": "Alimentos",
+      "Alimentos y Bebidas": "Alimentos", // Adaptación del sector guardado
+      "Automotriz": "Automotriz",
+      "Servicios": "Servicios",
+      "Logístico": "Logístico",
+      "Manufactura": "Manufactura",
+    };
+
+    const sectorKey = sectorMap[sector] || sector; // Obtener la clave de sector para el filtrado
 
     const filtered = diagnosticQuestions.filter((q) => {
-      if (q.tipo === "comun") return true;
-      if (q.tipo === sizeType) return true;
-      if (q.sectores.includes(sector)) return true;
-      return false;
+      // 1. Mostrar preguntas de filtro F0 siempre
+      if (q.modulo === "Filtro") return true; 
+
+      // 2. Mostrar preguntas comunes (sectores: ["General"])
+      const isCommon = q.sectores.includes("General");
+      
+      // 3. Mostrar preguntas específicas del sector
+      const isSpecific = q.sectores.includes(sectorKey);
+      
+      return isCommon || isSpecific;
     });
 
     setFilteredQuestions(filtered);
   }, []);
 
   /* ======================================================
-     Verificar si el usuario YA tiene diagnóstico guardado
-     ====================================================== */
-
+  // Verificar si el usuario YA tiene diagnóstico guardado
+  // ... (El resto del código permanece sin cambios)
+  // ====================================================== */
+  
   useEffect(() => {
     const userId = localStorage.getItem("currentUserId");
     const diagnostics = JSON.parse(localStorage.getItem("diagnostics")) || {};
 
     if (diagnostics[userId]) {
-      setFinished(true);           // 🔥 Mostrar pantalla final
-      setAnswers(diagnostics[userId]); // opcional, por si quieres verlas
+      setFinished(true); 
+      setAnswers(diagnostics[userId]); 
     }
   }, []);
 
-  /* ======================================================
-     Guardar respuesta actual
-     ====================================================== */
   const handleAnswer = (questionId, answer) => {
     setAnswers((prev) => ({
       ...prev,
@@ -61,9 +73,6 @@ export default function DiagnosticPage() {
     }));
   };
 
-  /* ======================================================
-     Finalizar diagnóstico
-     ====================================================== */
   const finishDiagnostic = () => {
     const userId = localStorage.getItem("currentUserId");
     const diagnostics = JSON.parse(localStorage.getItem("diagnostics")) || {};
@@ -72,12 +81,9 @@ export default function DiagnosticPage() {
 
     localStorage.setItem("diagnostics", JSON.stringify(diagnostics));
 
-    setFinished(true); // 🔥 Pantalla final
+    setFinished(true); 
   };
 
-  /* ======================================================
-     Volver a contestar → borrar diagnóstico
-     ====================================================== */
   const restartDiagnostic = () => {
     const userId = localStorage.getItem("currentUserId");
     const diagnostics = JSON.parse(localStorage.getItem("diagnostics")) || {};
@@ -89,10 +95,6 @@ export default function DiagnosticPage() {
     setStep(0);
     setFinished(false);
   };
-
-  /* ======================================================
-     Pantalla final si ya está completado
-     ====================================================== */
 
   if (finished) {
     return (
@@ -106,10 +108,6 @@ export default function DiagnosticPage() {
       </div>
     );
   }
-
-  /* ======================================================
-     Cargando preguntas filtradas
-     ====================================================== */
 
   if (filteredQuestions.length === 0)
     return <div className="loading">Cargando diagnóstico...</div>;
