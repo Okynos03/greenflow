@@ -1,19 +1,29 @@
 // src/utils/opportunityCalc.js
 import { OPPORTUNITIES, COSTOS_UNITARIOS } from "../data/costFactors";
 
-// Helper para obtener el valor numérico de una respuesta del diagnóstico
+/**
+ * Helper para obtener el valor numérico de una respuesta del diagnóstico.
+ * @param {Object} answers - Respuestas del diagnóstico.
+ * @param {string} questionId - ID de la pregunta.
+ * @returns {number} Valor numérico o 0.
+ */
 const getNumericAnswer = (answers, questionId) => {
-    //Si el objeto answers no existe o la respuesta específica no existe, retorna 0.
+    // Si el objeto answers no existe o la respuesta específica no existe, retorna 0.
     if (!answers || !answers[questionId]) return 0;
 
     const answer = answers[questionId];
+    let valueToParse;
     
     // Si la respuesta es un objeto (formato {option: "...", value: "..."})
     if (typeof answer === 'object' && answer.value) {
-        return Number(answer.value) || 0;
+        valueToParse = answer.value;
+    } else {
+        valueToParse = answer;
     }
-    // Si la respuesta es un string simple
-    return Number(answer) || 0;
+    
+    // Convertir a número y asegurar que retorna 0 si es NaN.
+    const numericValue = Number(valueToParse);
+    return isNaN(numericValue) ? 0 : numericValue;
 };
 
 /**
@@ -24,34 +34,43 @@ const getNumericAnswer = (answers, questionId) => {
  */
 const calculateOpportunityMetrics = (answers, opportunity) => {
     let ahorroAnual = 0;
-    let inversion = opportunity.inversionInicial || 1; 
+    
+    // Aseguramos que inversiónInicial sea un número, con fallback 1
+    const inversion = Number(opportunity.inversionInicial) || 1; 
+    const factorReduccion = Number(opportunity.factorReduccion) || 0;
 
-    // 1. Ahorro basado en Factor de Reducción (usando respuestas del usuario)
+    // 1. Ahorro basado en Factor de Reducción (usando respuestas del usuario D4/D7)
     if (opportunity.preguntaBaseId) {
         const baseValue = getNumericAnswer(answers, opportunity.preguntaBaseId);
         let costoUnitario = 0;
         
-        // Determinar el costo unitario basado en la pregunta
-        if (opportunity.preguntaBaseId === "D4") costoUnitario = COSTOS_UNITARIOS.KWH;
-        if (opportunity.preguntaBaseId === "D7") costoUnitario = COSTOS_UNITARIOS.TON_VERTEDERO;
+        // Determinar el costo unitario basado en la pregunta y asegurar que es un número
+        if (opportunity.preguntaBaseId === "D4") 
+            costoUnitario = Number(COSTOS_UNITARIOS.KWH) || 0;
+        if (opportunity.preguntaBaseId === "D7") 
+            costoUnitario = Number(COSTOS_UNITARIOS.TON_VERTEDERO) || 0;
 
         if (costoUnitario > 0) {
-            // Ahorro anual = (Base * Factor Reducción) * Costo Unitario
-            ahorroAnual = baseValue * opportunity.factorReduccion * costoUnitario;
+            // Ahorro anual = (Base * Factor Reducción * Costo Unitario)
+            ahorroAnual = baseValue * factorReduccion * costoUnitario;
         }
 
     // 2. Ahorro basado en Ahorro Directo (para oportunidades sin base de consumo simple)
     } else if (opportunity.ahorroDirecto) {
-        ahorroAnual = opportunity.ahorroDirecto;
+        ahorroAnual = Number(opportunity.ahorroDirecto) || 0;
 
     // 3. Ahorro basado en estimación (ej. Agua, si no se pidió m3 total en D)
     } else if (opportunity.baseM3AguaEstimada && opportunity.category === "Agua") {
-        const baseValue = opportunity.baseM3AguaEstimada;
-        const costoUnitario = COSTOS_UNITARIOS.AGUA_M3;
-        ahorroAnual = baseValue * opportunity.factorReduccion * costoUnitario;
+        const baseValue = Number(opportunity.baseM3AguaEstimada) || 0;
+        const costoUnitario = Number(COSTOS_UNITARIOS.AGUA_M3) || 0;
+        
+        ahorroAnual = baseValue * factorReduccion * costoUnitario;
     }
 
-    // Calcular ROI (en años, no en porcentaje, siguiendo tu ejemplo 1.4 años)
+    // Aseguramos que ahorroAnual es un número antes de calcular ROI
+    ahorroAnual = Number(ahorroAnual) || 0; 
+
+    // Calcular ROI (en años, no en porcentaje)
     // ROI (años) = Inversión Inicial / Ahorro Anual
     const roi = ahorroAnual > 0 ? (inversion / ahorroAnual) : Infinity;
 
@@ -95,4 +114,5 @@ export function calculateOverallOpportunityMetrics(answers) {
 }
 
 // Exportamos el detalle para que OpportunitiesPage pueda mostrar las tarjetas individuales
-export { calculateOpportunityMetrics, OPPORTUNITIES };
+export { calculateOpportunityMetrics, OPPORTUNITIES, getNumericAnswer }; 
+// NOTA: Exporté getNumericAnswer para que pueda ser utilizada en dashboardCalc.js

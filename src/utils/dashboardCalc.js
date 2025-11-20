@@ -51,34 +51,59 @@ const getAnswerString = (answer) => {
  * @param {Array} questions - Lista completa de preguntas para saber el máximo posible.
  * @returns {number} Nivel de Circularidad (0-100)
  */
-export function calculateCircularityScore(answers, questions) {
-    if (!answers || questions.length === 0) return 0;
+export function calculateCircularityScores(answers, questions) {
+    if (!answers || questions.length === 0) return { totalScore: 0, categoryScores: [] };
 
     let totalScore = 0;
-    let maxPossibleScore = 0;
+    let totalMaxScore = 0;
     
-    // Usaremos solo las preguntas del Módulo A (circularidad) y excluiremos el Módulo D (Huella) y F0 (Filtro)
+    // Objeto para acumular puntajes por la clave 'categoria'
+    const scoresByCategory = {}; 
+    const maxScoresByCategory = {};
+    
+    // Filtramos solo las preguntas del Módulo A (circularidad)
     const circularityQuestions = questions.filter(q => q.modulo && q.modulo.startsWith("A"));
 
     circularityQuestions.forEach(q => {
         const answerString = getAnswerString(answers[q.id]);
         
-        // El puntaje máximo es constante para cada pregunta circular
-        maxPossibleScore += MAX_SCORE_PER_QUESTION; 
+        // 🔥 Usamos la 'categoria' como la clave de agrupación
+        const categoryKey = q.categoria; 
+        
+        // Asumimos que las preguntas cualitativas tienen un máximo de 4 puntos
+        const maxScoreQ = MAX_SCORE_PER_QUESTION; 
+
+        // Acumular el puntaje máximo general y por categoría
+        totalMaxScore += maxScoreQ;
+        maxScoresByCategory[categoryKey] = (maxScoresByCategory[categoryKey] || 0) + maxScoreQ;
 
         if (answerString) {
-            // Obtener el puntaje de la respuesta, si existe en QUALITATIVE_SCORES
             const score = QUALITATIVE_SCORES[answerString] || 1;
             totalScore += score;
-        } else {
-            // Si la pregunta no fue respondida, asumimos 0
+            scoresByCategory[categoryKey] = (scoresByCategory[categoryKey] || 0) + score;
         }
     });
 
-    if (maxPossibleScore === 0) return 0;
+    // 2. Normalizar los puntajes por categoría a 0-100
+    const finalCategoryScores = Object.keys(scoresByCategory).map(cat => {
+        const achieved = scoresByCategory[cat];
+        const maximum = maxScoresByCategory[cat];
+        
+        const score = (achieved / maximum) * 100;
+        
+        return {
+            // 🔥 Usamos 'category' para la gráfica (CategoryBarChart espera este campo)
+            category: cat,
+            score: Number(score.toFixed(1))
+        };
+    });
 
-    // Fórmula: (Puntaje Obtenido / Puntaje Máximo) * 100
-    return Number(((totalScore / maxPossibleScore) * 100).toFixed(1));
+    const finalTotalScore = (totalScore / totalMaxScore) * 100;
+
+    return {
+        totalScore: Number(finalTotalScore.toFixed(1)),
+        categoryScores: finalCategoryScores
+    };
 }
 
 
@@ -197,7 +222,7 @@ export function getDashboardMetrics(answers, questions) {
     
     // Aseguramos que ahorroTotal es un número y no hay NaN
     const safeAhorroTotal = isNaN(ahorroTotal) ? 0 : ahorroTotal;
-    const monthlySavingsValue = safeAhorroTotal / 12;
+    const monthlySavingsValue = safeAhorroTotal > 0 ? (safeAhorroTotal / 12) : 0;
 
     // Cálculo de Reducción y Ahorro en Volumen
     const wasteReduction = calculateWasteReduction(answers);
@@ -210,9 +235,15 @@ export function getDashboardMetrics(answers, questions) {
         value: monthlySavingsValue, // Aquí va el valor numérico
     }));
     
+    // 🔥 CORRECCIÓN AQUÍ: Usar calculateCircularityScores
+    const { totalScore, categoryScores } = calculateCircularityScores(answers, questions);
+
     return {
-        // Nivel de Circularidad
-        score: calculateCircularityScore(answers, questions),
+        // Nivel de Circularidad (KPI)
+        score: totalScore,
+        
+        // 🔥 Incluir el array de categorías para la gráfica de barras
+        categoryScores: categoryScores, 
         
         // Ahorro
         savings: {
@@ -221,7 +252,7 @@ export function getDashboardMetrics(answers, questions) {
             monthlyData: monthlyData // El array formateado
         },
         
-        // 🔥 Incluir nuevos cálculos
+        // Incluir nuevos cálculos
         wasteReduction: wasteReduction, 
         waterSavings: waterSavings, 
 

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 
 // Componentes ya existentes
 import KPI from "../components/KPI";
 import MonthlyLineChart from "../components/MonthlyLineChart";
-import CategoryBarChart from "../components/CategoryBarChart";
+//import CategoryBarChart from "../components/CategoryBarChart";
 import ProgressList from "../components/ProgressList";
 
 import DiagnosticPage from "./DiagnosticPage";
@@ -14,7 +14,19 @@ import ResourcesPage from "./ResourcesPage.jsx";
 // Importaciones para el cálculo dinámico
 import { getDashboardMetrics } from "../utils/dashboardCalc";
 // 🔥 CORREGIDO: Importación del listado de preguntas
-import diagnosticQuestions from "../data/diagnosticQuestions"; 
+import diagnosticQuestions from "../data/diagnosticQuestions";
+
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  Cell 
+} from 'recharts';
+
 
 import "../styles/dashboard.css";
 
@@ -26,6 +38,29 @@ export default function Dashboard() {
     const diagnostics = JSON.parse(localStorage.getItem("diagnostics")) || {};
     return !!diagnostics[userId];
   };
+
+  const staticChartData = [
+    { name: 'Energía', score: 65 },
+    { name: 'Agua', score: 48 },
+    { name: 'Residuos', score: 72 },
+    { name: 'Logística', score: 56 },
+  ];
+
+  const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip" style={{ 
+          backgroundColor: '#fff', 
+          padding: '10px', 
+          border: '1px solid #ccc',
+          borderRadius: '4px'
+      }}>
+        <p className="label">{`${label} : ${payload[0].value}%`}</p>
+      </div>
+    );
+  }
+  return null;
+};
 
   // El estado inicial ahora depende del resultado de isDiagnosticCompleted()
   const initialTab = isDiagnosticCompleted() ? "resumen" : "diagnostico";
@@ -58,7 +93,7 @@ export default function Dashboard() {
     setActiveTab("recursos");
     setResourceSubTab(subTab);
   };
-  
+
   // Si aún está cargando los datos
   if (!dashboardData && isDiagnosticCompleted()) {
     return <div className="loading">Cargando métricas...</div>;
@@ -69,10 +104,12 @@ export default function Dashboard() {
   const savingsTotal = dashboardData?.savings.total || 0;
   const monthlyData = dashboardData?.savings.monthlyData || [];
   const progressAreas = dashboardData?.progressAreas || [];
-  
+
   // Nuevas métricas de volumen
   const wasteReduction = dashboardData?.wasteReduction || { reductionTon: 0, percentage: 0 };
   const waterSavings = dashboardData?.waterSavings || 0;
+
+  const categoryScores = dashboardData?.categoryScores || [];
 
 
   // Adaptar tus KPIs al nuevo formato de datos
@@ -174,13 +211,28 @@ export default function Dashboard() {
                 <MonthlyLineChart data={monthlyData} />
               </div>
 
+              {/* === AQUÍ ESTÁ EL CAMBIO: GRÁFICA ESTÁTICA RECHARTS === */}
               <div className="info-card">
                 <div className="chart-title">
-                  <strong>Potencial por Área</strong>
-                  <span>(%)</span>
+                  <strong>Puntuación por Categoría</strong>
                 </div>
-                {/* Gráfica de Categorías: Usar el puntaje por área */}
-                <CategoryBarChart data={progressAreas} />
+                
+                <div style={{ width: '100%', height: 300 }}>
+                  <ResponsiveContainer>
+                    <BarChart data={staticChartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} interval={0}/>
+                      <YAxis hide={false} axisLine={false} tickLine={false} domain={[0, 100]} />
+                      <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f3f4f6' }} />
+                      <Bar dataKey="score" radius={[4, 4, 0, 0]} barSize={50}>
+                        {staticChartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill="#10B981" />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+
               </div>
             </div>
 
