@@ -16,13 +16,16 @@ export default function OpportunitiesPage() {
     //ESTADOS PARA EL MODAL
     const [showModal, setShowModal] = useState(false);
     const [selectedOpportunity, setSelectedOpportunity] = useState(null);
+    const [hasAnswers, setHasAnswers] = useState(false);
 
     useEffect(() => {
         const userId = localStorage.getItem("currentUserId");
         const diagnostics = JSON.parse(localStorage.getItem("diagnostics")) || {};
         const answers = diagnostics[userId];
 
-        if (answers) {
+        if (answers && Object.keys(answers).length > 0) {
+            setHasAnswers(true); // Hay respuestas
+
             // Cálculo de CO2
             const footprint = calculateCarbonFootprint(answers);
             setCo2(footprint.total / 1000); 
@@ -30,8 +33,8 @@ export default function OpportunitiesPage() {
             // Cálculo de Ahorro y ROI Potencial
             const overallMetrics = calculateOverallOpportunityMetrics(answers);
             setMetrics(overallMetrics);
-
         } else {
+            setHasAnswers(false); // No hay respuestas
             setCo2(0);
             setMetrics({ ahorroTotal: 0, roiPromedio: null });
         }
@@ -138,6 +141,22 @@ export default function OpportunitiesPage() {
       )
     }
 
+    if (!hasAnswers) {
+      return (
+        <div className="op-container">
+            <div className="info-card diagnostic-needed">
+                <h1>💡 Oportunidades de Mejora</h1>
+                <p>
+                    Para generar tu **Reporte de Impacto y Ahorro Potencial**, es indispensable que 
+                    primero completes el diagnóstico.
+                </p>
+                <p className="highlight-text">
+                    Dirígete a la pestaña **📋 Diagnóstico** para comenzar a ingresar tus datos base.
+                </p>
+                            </div>
+        </div>
+      )
+    }
 
     return (
         <div className="op-container">

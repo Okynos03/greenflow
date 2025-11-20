@@ -3,14 +3,16 @@ import { OPPORTUNITIES, COSTOS_UNITARIOS } from "../data/costFactors";
 
 // Helper para obtener el valor numérico de una respuesta del diagnóstico
 const getNumericAnswer = (answers, questionId) => {
+    //Si el objeto answers no existe o la respuesta específica no existe, retorna 0.
+    if (!answers || !answers[questionId]) return 0;
+
     const answer = answers[questionId];
-    if (!answer) return 0;
     
     // Si la respuesta es un objeto (formato {option: "...", value: "..."})
     if (typeof answer === 'object' && answer.value) {
         return Number(answer.value) || 0;
     }
-    // Si la respuesta es un string simple (que no debería ocurrir con preguntas numéricas pero es seguro)
+    // Si la respuesta es un string simple
     return Number(answer) || 0;
 };
 
