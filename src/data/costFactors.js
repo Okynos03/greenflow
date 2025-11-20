@@ -1,4 +1,4 @@
-// data/costFactors.js
+// data/costFactors.js (ACTUALIZADO)
 
 // Costos unitarios promedio estimados en Celaya, Guanajuato (MXN)
 export const COSTOS_UNITARIOS = {
@@ -13,43 +13,62 @@ export const COSTOS_UNITARIOS = {
 };
 
 // Definición de las Oportunidades Clave (Ejemplos)
-// Estos datos son FIJOS y se usan para calcular el ROI y el Ahorro Potencial Total
 export const OPPORTUNITIES = [
     {
         id: "OP1_ENERGIA",
         title: "Implementación Solar Fotovoltaico",
         category: "Energía",
-        inversionInicial: 450000, // MXN (Fijo)
-        // Factor de reducción: Se proyecta reducir el 60% del consumo base de kWh
+        inversionInicial: 450000, 
         factorReduccion: 0.60, 
-        preguntaBaseId: "D4" // Consumo base: D4 (kWh)
+        preguntaBaseId: "D4", 
+        benefits: [
+            "Reducción de costos de electricidad",
+            "Independencia energética",
+            "Beneficios fiscales en GTO"
+        ],
+        description: "Instalación de paneles solares fotovoltaicos en el techo de la planta para cubrir hasta el 60% del consumo energético anual. Esto reduce drásticamente las emisiones de Alcance 2 y garantiza la estabilidad del costo energético a largo plazo. Se recomienda evaluar la capacidad estructural del techo y la interconexión con CFE."
     },
     {
         id: "OP2_RESIDUOS",
         title: "Simbiosis Industrial y Venta de Residuos",
         category: "Residuos",
-        inversionInicial: 30000, // MXN (Logística / Estudio)
-        // Factor de reducción: Se proyecta desviar el 40% del residuo de vertedero
+        inversionInicial: 30000, 
         factorReduccion: 0.40,
-        preguntaBaseId: "D7" // Consumo base: D7 (toneladas a vertedero)
+        preguntaBaseId: "D7", 
+        benefits: [
+            "Generación de ingresos por residuos",
+            "Reducción de costos de disposición",
+            "Cumplimiento normativo avanzado"
+        ],
+        description: "Establecimiento de acuerdos de 'Simbiosis Industrial' con empresas cercanas. Los residuos que actualmente se envían a vertedero (ej. plásticos, metales, lodos) se venden o se entregan a otra empresa como materia prima. La inversión incluye el estudio de factibilidad y la logística de recolección."
     },
     {
         id: "OP3_FLUIDOS",
         title: "Regeneración de Fluidos de Maquinado",
         category: "Flujos Internos",
-        inversionInicial: 120000, // MXN (Sistema de filtrado avanzado)
-        // No está en las preguntas D, se usa una estimación de ahorro anual directo (ej. 80,000 MXN)
+        inversionInicial: 120000, 
         ahorroDirecto: 80000, 
-        preguntaBaseId: null // No requiere una pregunta de consumo directo para este ejemplo
+        preguntaBaseId: null,
+        benefits: [
+            "Ahorro en compra de lubricantes vírgenes",
+            "Disminución de residuos peligrosos",
+            "Mayor calidad de maquinado"
+        ],
+        description: "Instalación de un sistema de filtrado y tratamiento avanzado de fluidos de corte y lubricantes hidráulicos. Esto extiende la vida útil de los fluidos de 2 a 4 veces, reduciendo el volumen de residuos peligrosos generados y los costos de adquisición de materiales nuevos."
     },
     {
         id: "OP4_AGUA",
         title: "Sistema de Reutilización de Aguas Grises",
         category: "Agua",
-        inversionInicial: 120000, // MXN (Instalación de infraestructura)
-        // Factor de reducción: Se proyecta reducir el 30% del consumo total de agua (usaremos una estimación de consumo de agua total del sector Servicios)
+        inversionInicial: 120000,
         factorReduccion: 0.30, 
-        preguntaBaseId: null, // Asumimos un Consumo Base de Agua anual de 1500 m3 si el usuario es del sector Servicios
-        baseM3AguaEstimada: 1500
+        preguntaBaseId: null, 
+        baseM3AguaEstimada: 1500,
+        benefits: [
+            "Reducción de consumo de agua potable",
+            "Ahorro en costos de agua",
+            "Resiliencia ante sequías"
+        ],
+        description: "Implementación de infraestructura de captación de agua pluvial y reutilización de aguas grises (procedentes de lavabos o duchas) para usos no potables, como inodoros, riego o ciertos procesos de enfriamiento. Esto reduce la dependencia de la red municipal."
     }
 ];

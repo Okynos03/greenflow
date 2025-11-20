@@ -7,11 +7,15 @@ import { calculateCarbonFootprint } from "../utils/carbonCalc";
 import { calculateOverallOpportunityMetrics, calculateOpportunityMetrics, OPPORTUNITIES } from "../utils/opportunityCalc"; 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import OpportunityModal from "../components/OpportunityModal";
 
 export default function OpportunitiesPage() {
 
     const [co2, setCo2] = useState(null); 
     const [metrics, setMetrics] = useState({ ahorroTotal: 0, roiPromedio: null });
+    //ESTADOS PARA EL MODAL
+    const [showModal, setShowModal] = useState(false);
+    const [selectedOpportunity, setSelectedOpportunity] = useState(null);
 
     useEffect(() => {
         const userId = localStorage.getItem("currentUserId");
@@ -111,6 +115,12 @@ export default function OpportunitiesPage() {
         doc.save("reporte-impacto-circular.pdf");
     };
 
+    // Función para abrir el modal
+    const handleViewDetails = (opportunity) => {
+        setSelectedOpportunity(opportunity);
+        setShowModal(true);
+    };
+
 
     // El JSX de renderizado (return) del componente permanece igual,
     // ya que usa las variables 'co2' y 'metrics' que ya actualizamos en el useEffect.
@@ -134,23 +144,22 @@ export default function OpportunitiesPage() {
             <h1>Oportunidades de Mejora</h1>
             <p>Iniciativas personalizadas para tu empresa basadas en el diagnóstico</p>
 
-            {/* ===== KPIs (Ahora dinámicos) ===== */}
+            {/* ===== KPIs (sin cambios) ===== */}
             <div className="op-kpis">
+                {/* ... Renderizado de KPIs ... */}
                 <div className="op-kpi-card">
                     <span className="op-kpi-icon">$</span>
                     <h3>Ahorro Potencial Anual</h3>
                     <p className="op-kpi-value">${metrics.ahorroTotal.toLocaleString()} MXN</p>
                 </div>
-
+                {/* ... otros KPIs ... */}
                 <div className="op-kpi-card">
                     <span className="op-kpi-icon">📉</span>
                     <h3>Reducción de CO₂</h3>
-
                     <p className="op-kpi-value">
                         {co2 === null ? "Calculando..." : `${co2.toFixed(1)} ton/año`}
                     </p>
                 </div>
-
                 <div className="op-kpi-card">
                     <span className="op-kpi-icon">⏱</span>
                     <h3>ROI Promedio</h3>
@@ -170,7 +179,6 @@ export default function OpportunitiesPage() {
                 const diagnostics = JSON.parse(localStorage.getItem("diagnostics")) || {};
                 const answers = diagnostics[userId];
                 
-                // Recalcular métricas por proyecto para mostrar
                 const { ahorroAnual, roi } = calculateOpportunityMetrics(answers, op);
 
                 return (
@@ -180,7 +188,7 @@ export default function OpportunitiesPage() {
                             <span className="op-tag">Recomendada</span>
                         </div>
 
-                        <p>Descripción de la oportunidad {op.title}.</p>
+                        <p>{op.description.split('. ')[0]}.</p> {/* Usar la primera oración de la descripción */}
 
                         <div className="op-project-grid">
                             <div><strong>Categoría</strong><br/>{op.category}</div>
@@ -192,19 +200,31 @@ export default function OpportunitiesPage() {
                             <div><strong>ROI</strong><br/>{roi === null ? 'N/A' : `${roi} años`}</div>
                         </div>
 
+                        {/* ✅ Beneficios Dinámicos */}
                         <div className="op-benefits">
-                            <span>✔ Beneficio 1</span>
-                            <span>✔ Beneficio 2</span>
-                            <span>✔ Beneficio 3</span>
+                            {op.benefits.map((b, index) => (
+                                <span key={index}>✔ {b}</span>
+                            ))}
                         </div>
 
                         <div className="op-project-actions">
-                            <button className="btn-secondary">Ver Detalles</button>
+                            {/* ✅ Llama a la función del modal */}
+                            <button className="btn-secondary" onClick={() => handleViewDetails(op)}>
+                                Ver Detalles
+                            </button>
                             <button className="btn-primary">Iniciar Proyecto</button>
                         </div>
                     </div>
                 );
             })}
+            
+            {/* ✅ Modal de Detalles (Se renderiza condicionalmente) */}
+            {showModal && selectedOpportunity && (
+                <OpportunityModal 
+                    opportunity={selectedOpportunity} 
+                    onClose={() => setShowModal(false)} 
+                />
+            )}
         </div>
     );
 }

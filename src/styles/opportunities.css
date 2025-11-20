@@ -96,3 +96,113 @@
   border: none;
   cursor: pointer;
 }
+
+/* ========================================= */
+/* =========== MODAL DE DETALLES =========== */
+/* ========================================= */
+
+.modal-overlay {
+    /* Fondo oscuro transparente que cubre toda la pantalla */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegura que esté por encima de todo */
+}
+
+.modal-container.op-modal {
+    /* Contenedor del modal */
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 700px; /* Ancho máximo para el modal */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    /* Animación simple de entrada */
+    transform: translateY(0);
+    transition: transform 0.3s ease-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #2c3e50;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #7f8c8d;
+}
+
+.modal-category {
+    font-size: 16px;
+    color: #34495e;
+    margin-bottom: 15px;
+}
+
+.modal-description {
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+.modal-subtitle {
+    font-size: 18px;
+    color: #2c3e50;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* Reutiliza la cuadrícula pero con 3 columnas para ser más compacto en el modal */
+.op-project-grid.modal-grid {
+    grid-template-columns: repeat(3, 1fr);
+    margin: 15px 0;
+    padding: 15px;
+    border: 1px solid #f6f7f8;
+    border-radius: 10px;
+    background: #fcfcfc;
+}
+
+.modal-benefits-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.modal-benefits-list li {
+    background: #e9f7ef; /* Fondo verde claro para beneficios */
+    color: #0fa958;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+    margin-top: 25px;
+}
