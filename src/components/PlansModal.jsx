@@ -71,8 +71,8 @@ export default function PlansModal({ onClose }) {
             <div className="plan-icon purple-icon">👑</div>
             <h4 className="plan-name">Empresarial</h4>
             <p className="plan-desc">Solución completa para grandes empresas</p>
-            <div className="plan-price">$1,499 <span>MXN</span></div>
-            <p className="plan-period">por mes</p>
+            <div className="plan-price">$5,199 <span>MXN</span></div>
+            <p className="plan-period">Anual</p>
             
             <ul className="plan-features">
               <li>✔ Todo lo del plan Profesional</li>

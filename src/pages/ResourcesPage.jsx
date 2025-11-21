@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/resources.css";
 // Importar el PDF simulado
-import GuiaRecopilacionDatosPDF from "../assets/GuiaRecopilacionDatos.pdf";
+import GuiaRecopilacionDatosPDF from "../assets/circular.pdf";
 
 // La prop 'initialTab' es nueva
 export default function ResourcesPage({ initialTab }) { 
@@ -56,19 +56,17 @@ export default function ResourcesPage({ initialTab }) {
         <div className="res-card highlighted"> {/* Añadir clase para destacarlo si se redirige */}
           <div className="res-icon">🚨</div>
           <div className="res-info">
-            <h2>Plantilla: Cómo Recopilar Datos Base (Energía, Agua, Residuos)</h2>
+            <h2>Guía práctica para implementar la economía circular en las pymes</h2>
             <span className="res-tag red">Obligatorio</span>
             <p>
-              Documento esencial que le indica exactamente qué registros anuales debe consolidar para completar el diagnóstico.
+              Guía práctica para implementar la economía circular en las pymes, indica exactamente qué registros anuales debe consolidar para completar el diagnóstico.
             </p>
             <div className="res-meta">
-              <span>PDF</span> • <span>Plantilla Excel adjunta</span>
+              <span>PDF</span> • <span>21 páginas</span>
             </div>
           </div>
           {/* ✅ Enlace directo al archivo para descarga */}
-          <a href={GuiaRecopilacionDatosPDF} download className="res-download">
-            ⬇ Descargar Plantilla
-          </a>
+          <a href={GuiaRecopilacionDatosPDF} download className="res-download">⬇ Descargar</a>
         </div>
       )}
 
@@ -77,13 +75,13 @@ export default function ResourcesPage({ initialTab }) {
           {/* ... (Guía de Economía Circular para PYMEs) ... */}
           <div className="res-icon">📘</div>
           <div className="res-info">
-            <h2>Guía de Economía Circular para PYMEs</h2>
+            <h2>Huella de Carbono y parámetros esenciales</h2>
             <span className="res-tag green">Principiante</span>
             <p>
-              Manual completo para implementar prácticas circulares en pequeñas y medianas empresas.
+              Manual completo para calcular la huella de carbono.
             </p>
             <div className="res-meta">
-              <span>PDF</span> • <span>45 páginas</span>
+              <span>PDF</span> • <span>12 páginas</span>
             </div>
           </div>
           <button className="res-download">⬇ Descargar</button>
