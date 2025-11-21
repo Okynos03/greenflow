@@ -1,8 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/resources.css";
+// Importar el PDF simulado
+import GuiaRecopilacionDatosPDF from "../assets/circular.pdf";
 
-export default function ResourcesPage() {
-  const [activeTab, setActiveTab] = useState("guias");
+// La prop 'initialTab' es nueva
+export default function ResourcesPage({ initialTab }) { 
+  // Usar initialTab si está presente, sino, usar "guias" por defecto
+  const [activeTab, setActiveTab] = useState(initialTab || "guias"); 
+
+  // Si la pestaña cambia externamente, actualizar el estado interno
+  useEffect(() => {
+    if (initialTab && initialTab !== activeTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
 
   return (
     <div className="res-container">
@@ -17,6 +28,7 @@ export default function ResourcesPage() {
         >
           📄 Guías
         </button>
+        {/* ... (otros botones de subtabs) ... */}
         <button
           className={activeTab === "videos" ? "active" : ""}
           onClick={() => setActiveTab("videos")}
@@ -38,17 +50,38 @@ export default function ResourcesPage() {
       </div>
 
       {/* ======================= GUÍAS ======================= */}
+      
       {activeTab === "guias" && (
-        <div className="res-card">
-          <div className="res-icon">📘</div>
+        // ✅ RECURSO DE RECOPILACIÓN (DEBE SER EL PRIMERO)
+        <div className="res-card highlighted"> {/* Añadir clase para destacarlo si se redirige */}
+          <div className="res-icon">🚨</div>
           <div className="res-info">
-            <h2>Guía de Economía Circular para PYMEs</h2>
-            <span className="res-tag green">Principiante</span>
+            <h2>Guía práctica para implementar la economía circular en las pymes</h2>
+            <span className="res-tag red">Obligatorio</span>
             <p>
-              Manual completo para implementar prácticas circulares en pequeñas y medianas empresas.
+              Guía práctica para implementar la economía circular en las pymes, indica exactamente qué registros anuales debe consolidar para completar el diagnóstico.
             </p>
             <div className="res-meta">
-              <span>PDF</span> • <span>45 páginas</span>
+              <span>PDF</span> • <span>21 páginas</span>
+            </div>
+          </div>
+          {/* ✅ Enlace directo al archivo para descarga */}
+          <a href={GuiaRecopilacionDatosPDF} download className="res-download">⬇ Descargar</a>
+        </div>
+      )}
+
+      {activeTab === "guias" && (
+        <div className="res-card">
+          {/* ... (Guía de Economía Circular para PYMEs) ... */}
+          <div className="res-icon">📘</div>
+          <div className="res-info">
+            <h2>Huella de Carbono y parámetros esenciales</h2>
+            <span className="res-tag green">Principiante</span>
+            <p>
+              Manual completo para calcular la huella de carbono.
+            </p>
+            <div className="res-meta">
+              <span>PDF</span> • <span>12 páginas</span>
             </div>
           </div>
           <button className="res-download">⬇ Descargar</button>
@@ -56,20 +89,21 @@ export default function ResourcesPage() {
       )}
 
       {activeTab === "guias" && (
+        // ... (Certificaciones de Sustentabilidad en México) ...
         <div className="res-card">
-          <div className="res-icon">📗</div>
-          <div className="res-info">
-            <h2>Certificaciones de Sustentabilidad en México</h2>
-            <span className="res-tag yellow">Intermedio</span>
-            <p>
-              Información sobre certificaciones disponibles y cómo obtenerlas.
-            </p>
-            <div className="res-meta">
-              <span>PDF</span> • <span>30 páginas</span>
-            </div>
-          </div>
-          <button className="res-download">⬇ Descargar</button>
-        </div>
+           <div className="res-icon">📗</div>
+           <div className="res-info">
+             <h2>Certificaciones de Sustentabilidad en México</h2>
+             <span className="res-tag yellow">Intermedio</span>
+             <p>
+               Información sobre certificaciones disponibles y cómo obtenerlas.
+             </p>
+             <div className="res-meta">
+               <span>PDF</span> • <span>30 páginas</span>
+             </div>
+           </div>
+           <button className="res-download">⬇ Descargar</button>
+         </div>
       )}
 
       {/* ======================= VIDEOS ======================= */}

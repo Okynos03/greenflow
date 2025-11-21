@@ -100,11 +100,12 @@ export default function RegisterModal({ onClose }) {
           <label>Sector</label>
           <select name="sector" value={formData.sector} onChange={handleChange} required>
             <option value="">Selecciona un sector</option>
+            {/* Sectores Definidos */}
             <option value="Manufactura">Manufactura</option>
-            <option value="Alimentos y Bebidas">Alimentos y Bebidas</option>
-            <option value="Textil">Textil</option>
-            <option value="Construcción">Construcción</option>
+            <option value="Automotriz">Automotriz</option> 
+            <option value="Alimentos y Bebidas">Alimentos y Bebidas</option> 
             <option value="Servicios">Servicios</option>
+            <option value="Logístico">Logístico</option>
             <option value="Otro">Otro</option>
           </select>
 

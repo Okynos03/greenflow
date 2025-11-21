@@ -1,18 +1,26 @@
 import React, { useRef, useEffect, useState } from "react";
 
 function computePoints(data, width, height, pad = 24) {
-  if (!data || data.length === 0) return { poly: "", points: [] };
-  const vals = data.map(d => d.value);
-  const min = Math.min(...vals);
-  const max = Math.max(...vals);
-  const range = max - min || 1;
-  const stepX = (width - pad * 2) / Math.max(1, data.length - 1);
+    if (!data || data.length === 0) return { poly: "", points: [] };
+    
+    // Aseguramos que solo usamos números válidos, mapeando a d.value
+    const validData = data.filter(d => typeof d.value === 'number' && !isNaN(d.value));
 
-  const points = data.map((d, i) => {
-    const x = pad + i * stepX;
-    const y = pad + (1 - (d.value - min) / range) * (height - pad * 2);
-    return { x, y, d };
-  });
+    // Si no hay datos válidos, retornamos vacío
+    if (validData.length === 0) return { poly: "", points: [] };
+
+    const vals = validData.map(d => d.value);
+    const min = Math.min(...vals);
+    const max = Math.max(...vals);
+    const range = max - min || 1;
+    const stepX = (width - pad * 2) / Math.max(1, data.length - 1);
+
+  // Usar validData en lugar de data
+    const points = validData.map((d, i) => {
+          const x = pad + i * stepX;
+          const y = pad + (1 - (d.value - min) / range) * (height - pad * 2);
+          return { x, y, d };
+    });
 
   const poly = points.map(p => `${p.x},${p.y}`).join(" ");
   return { poly, points };

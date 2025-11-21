@@ -8,7 +8,12 @@ export default function DiagnosticQuestion({ question, answer, onAnswer }) {
 
   return (
     <div className="question-card">
-      <span className="question-tag">{question.categoria}</span>
+      <div className="question-tags-container">
+        {/* Mostrar el Pilar si existe */}
+        {question.pilar && <span className="question-tag pilar-tag">Pilar: {question.pilar}</span>}
+        {/* Mostrar la Categoría */}
+        <span className="question-tag categoria-tag">{question.categoria}</span>
+      </div>
 
       <h2 className="question-text">{question.pregunta}</h2>
 

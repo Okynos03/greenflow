@@ -3,12 +3,14 @@ import "./../styles/landing.css";
 import logo from "../assets/logo.png";
 import RegisterModal from "./RegisterModal";
 import LoginModal from "./LoginModal";
+import PlansModal from "./PlansModal";
 
 export default function Navbar() {
   const [showRegister, setShowRegister] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [logged, setLogged] = useState(false);
   const [userName, setUserName] = useState("");
+  const [showPlans, setShowPlans] = useState(false);
 
   useEffect(() => {
     const flag = !!localStorage.getItem("greenflow_logged_in");
@@ -39,6 +41,11 @@ export default function Navbar() {
         <div className="navbar-right">
           {!logged ? (
             <>
+            {/* --- BOTÓN NUEVO --- */}
+              <button className="navbar-btn-secondary" onClick={() => setShowPlans(true)}>
+                Ver Planes
+              </button>
+              {/* ------------------- */}
               <button className="navbar-link" onClick={() => setShowRegister(true)}>
                 Registrarse
               </button>
@@ -48,6 +55,11 @@ export default function Navbar() {
             </>
           ) : (
             <>
+            {/* --- BOTÓN NUEVO --- */}
+              <button className="navbar-btn-secondary" onClick={() => setShowPlans(true)}>
+                Ver Planes
+              </button>
+              {/* ------------------- */}
               <div className="navbar-user"> {userName || "Empresa Demo"} </div>
               <button className="navbar-btn" onClick={handleLogout}>
                 Salir
@@ -59,6 +71,7 @@ export default function Navbar() {
 
       {showRegister && <RegisterModal onClose={() => setShowRegister(false)} />}
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+      {showPlans && <PlansModal onClose={() => setShowPlans(false)} />}
     </>
   );
 }
