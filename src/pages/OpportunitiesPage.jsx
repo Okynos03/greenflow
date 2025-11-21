@@ -1,3 +1,5 @@
+// src/pages/OpportunitiesPage.jsx
+
 import { useEffect, useState } from "react";
 import "../styles/opportunities.css";
 import { calculateCarbonFootprint } from "../utils/carbonCalc";
@@ -120,38 +122,6 @@ export default function OpportunitiesPage() {
         setToast({ type: "success", message: "PDF descargado correctamente" });
     };
 
-    const generateEmailBodyText = () => {
-        const userId = localStorage.getItem("currentUserId");
-        const diagnostics = JSON.parse(localStorage.getItem("diagnostics")) || {};
-        const answers = diagnostics[userId] || {};
-        
-        const footprint = calculateCarbonFootprint(answers) || { total: 0 }; 
-        const overallMetrics = calculateOverallOpportunityMetrics(answers);
-        const date = new Date().toLocaleDateString();
-
-        return `
-REPORTE DE IMPACTO Y OPORTUNIDADES
-Fecha: ${date}
---------------------------------------------------
-A. RESUMEN FINANCIERO
-- Ahorro Potencial Anual: $${overallMetrics.ahorroTotal.toLocaleString()} MXN
-- ROI Promedio: ${overallMetrics.roiPromedio === null ? 'N/A' : overallMetrics.roiPromedio + ' años'}
-- Reducción de CO2: ${(footprint.total / 1000).toFixed(2)} toneladas
---------------------------------------------------
-B. DETALLE HUELLA DE CARBONO (kg CO2e)
-- D1. Combustión Fija: ${footprint.D1.toFixed(0)}
-- D2. Combustión Móvil: ${footprint.D2.toFixed(0)}
-- D3. Refrigerantes: ${footprint.D3.toFixed(0)}
-- D4. Electricidad: ${footprint.D4.toFixed(0)}
-- D6. Viajes de Negocios: ${footprint.D6.toFixed(0)}
-- D7. Residuos a Vertedero: ${footprint.D7.toFixed(0)}
-
-TOTAL HUELLA: ${(footprint.total / 1000).toFixed(2)} Toneladas de CO2e
---------------------------------------------------
-Este reporte fue generado automáticamente por la plataforma de Economía Circular.
-        `;
-    };
-
     // PASO 1: Iniciar proceso (Abrir Modal)
     const handleInitiateEmail = () => {
         const userEmail = getUserEmail();
@@ -163,27 +133,48 @@ Este reporte fue generado automáticamente por la plataforma de Economía Circul
         setShowEmailConfirm(true); // Abrir modal
     };
 
-    // PASO 2: Confirmar y Enviar (Acción del Modal)
+    // PASO 2: Confirmar y Enviar (Acción del Modal ACTUALIZADA)
     const handleConfirmSend = async () => {
         setIsSending(true);
-        // Cerramos el modal inmediatamente o esperamos, depende del gusto. 
-        // Aquí lo dejamos abierto hasta que termine o cerramos antes.
-        // Vamos a cerrarlo para que se vea la carga en el botón o toast.
         setShowEmailConfirm(false); 
 
+        // Recalcular datos para tenerlos frescos al enviar
+        const userId = localStorage.getItem("currentUserId");
+        const diagnostics = JSON.parse(localStorage.getItem("diagnostics")) || {};
+        const answers = diagnostics[userId] || {};
+        const footprint = calculateCarbonFootprint(answers) || { total: 0 }; 
+        const overallMetrics = calculateOverallOpportunityMetrics(answers);
+        const date = new Date().toLocaleDateString();
+
         try {
-            const emailBody = generateEmailBodyText();
+            // Preparamos los parámetros INDIVIDUALES para la plantilla HTML
             const templateParams = {
                 to_email: targetEmail,
                 subject: "Tu Reporte de Economía Circular",
-                message: emailBody,
+                
+                // Variables de Cabecera
+                date: date,
+                user_name: "Usuario Greenflow", // Puedes personalizar esto si guardas el nombre
+
+                // Variables Financieras
+                ahorro: `$${overallMetrics.ahorroTotal.toLocaleString()} MXN`,
+                roi: overallMetrics.roiPromedio === null ? 'N/A' : `${overallMetrics.roiPromedio} años`,
+                co2_total: `${(footprint.total / 1000).toFixed(2)}`,
+
+                // Variables de Detalle (Huella)
+                d1: footprint.D1.toFixed(0),
+                d2: footprint.D2.toFixed(0),
+                d3: footprint.D3.toFixed(0),
+                d4: footprint.D4.toFixed(0),
+                d6: footprint.D6.toFixed(0),
+                d7: footprint.D7.toFixed(0)
             };
 
             await emailjs.send(
-                'service_zfsa5ge',    
-                'template_zqmhwxl',   
+                'service_t2aamo8',    
+                'template_ae6ewjc',   
                 templateParams,
-                'zEjT2J1fsxccPvL6D'     
+                'OdZsL29zoWRQ6rFYw'     
             );
 
             // ÉXITO: Mostrar Toast
@@ -272,7 +263,7 @@ Este reporte fue generado automáticamente por la plataforma de Economía Circul
 
                 <button 
                     className="op-export-btn" 
-                    onClick={handleInitiateEmail} // CAMBIADO: Llama a la función que abre el modal
+                    onClick={handleInitiateEmail} 
                     disabled={isSending}
                     style={{ backgroundColor: isSending ? '#95a5a6' : '#2ecc71' }}
                 >
@@ -318,7 +309,7 @@ Este reporte fue generado automáticamente por la plataforma de Economía Circul
                 );
             })}
             
-            {/* ✅ Modal de Detalles (Existente) */}
+            {/* ✅ Modal de Detalles */}
             {showModal && selectedOpportunity && (
                 <OpportunityModal 
                     opportunity={selectedOpportunity} 
@@ -326,7 +317,7 @@ Este reporte fue generado automáticamente por la plataforma de Economía Circul
                 />
             )}
 
-            {/* ✅ NUEVO: Modal de Confirmación de Correo */}
+            {/* ✅ Modal de Confirmación de Correo */}
             {showEmailConfirm && (
                 <div className="modal-overlay">
                     <div className="modal-container op-modal" style={{ maxWidth: '500px' }}>
