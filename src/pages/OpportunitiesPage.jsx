@@ -171,10 +171,10 @@ export default function OpportunitiesPage() {
             };
 
             await emailjs.send(
-                'service_t2aamo8',    
-                'template_ae6ewjc',   
+                'service_zfsa5ge',    
+                'template_zqmhwxl',   
                 templateParams,
-                'OdZsL29zoWRQ6rFYw'     
+                'zEjT2J1fsxccPvL6D'     
             );
 
             // ÉXITO: Mostrar Toast
